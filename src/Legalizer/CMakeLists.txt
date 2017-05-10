@@ -1,5 +1,6 @@
 ADD_LIBRARY (Legalizer
 Legal.cpp
+Abacus.cpp
 )
 INCLUDE_DIRECTORIES (
         ${PROJECT_SOURCE_DIR}/Parser

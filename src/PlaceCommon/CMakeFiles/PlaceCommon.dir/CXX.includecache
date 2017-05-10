@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/ParamPlacement.cpp
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/ParamPlacement.cpp
 string
 -
 iostream
@@ -14,17 +14,17 @@ iostream
 cstdio
 -
 ParamPlacement.h
-/home/yslu/html/pd17/legalization/src/PlaceCommon/ParamPlacement.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/ParamPlacement.h
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/ParamPlacement.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/ParamPlacement.h
 string
 -
 arghandler.h
-/home/yslu/html/pd17/legalization/src/PlaceCommon/arghandler.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/arghandler.h
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/Util.cpp
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/Util.cpp
 Util.h
-/home/yslu/html/pd17/legalization/src/PlaceCommon/Util.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/Util.h
 cstdarg
 -
 string
@@ -36,7 +36,7 @@ fstream
 sys/resource.h
 -
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/Util.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/Util.h
 iostream
 -
 cstdio
@@ -48,9 +48,9 @@ math.h
 sys/resource.h
 -
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/arghandler.cpp
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/arghandler.cpp
 arghandler.h
-/home/yslu/html/pd17/legalization/src/PlaceCommon/arghandler.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/arghandler.h
 cstdlib
 -
 cstdio
@@ -64,7 +64,7 @@ map
 cstring
 -
 
-/home/yslu/html/pd17/legalization/src/PlaceCommon/arghandler.h
+/home/yoda/Documents/Github/Legalizer/src/PlaceCommon/arghandler.h
 string
 -
 map

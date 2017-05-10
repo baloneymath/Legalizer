@@ -1,2 +1,2 @@
-/usr/bin/ar cr libLegalizer.a  CMakeFiles/Legalizer.dir/Legal.cpp.o
+/usr/bin/ar qc libLegalizer.a  CMakeFiles/Legalizer.dir/Legal.cpp.o CMakeFiles/Legalizer.dir/Abacus.cpp.o
 /usr/bin/ranlib libLegalizer.a

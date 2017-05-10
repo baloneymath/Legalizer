@@ -2,6 +2,7 @@
 #include "arghandler.h"
 #include "GnuplotLivePlotter.h"
 #include "GnuplotMatrixPlotter.h"
+#include "Abacus.h"
 
 #include <algorithm>
 #include <cmath>
@@ -13,18 +14,22 @@ using namespace std;
 
 bool CLegal::solve()
 {
+    saveGlobalResult();
     // TODO: edit your code HERE
     // Note:
     //      1. You should save your legal solution into m_bestLocations, and call setLegalResult() tp upload it into Placement.
     //      2. Run check() to make sure that the solution is lega.
     //      3. Feel free to add any class, function, and/or data member.
     // Good luck!
-    saveGlobalResult();
+    
+    Abacus abacus(*this);
+    abacus.legal();
 
     setLegalResult();
     if( check() )
     {
-        cout<< "total displacement: " << totalDisplacement() << endl;
+        cout << "total displacement: " << totalDisplacement() << endl;
+        return true;
     }
     else
         return false;
@@ -299,4 +304,14 @@ void CLegal::setLegalResult()
         Module &curModule = _placement.module(moduleId);
         curModule.setPosition(m_bestLocations[moduleId].x,m_bestLocations[moduleId].y);
     }
+}
+
+void CLegal::plot()
+{
+    for (unsigned i = 0; i < _placement.numModules(); ++i) {
+        Module& curModule = _placement.module(i);
+        gnuplotLivePlotter.addRectangle(curModule.rectangle());
+    }
+    gnuplotLivePlotter.show();
+    gnuplotLivePlotter.clearObjects();
 }

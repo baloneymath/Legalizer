@@ -6,15 +6,27 @@
 
 #IncludeRegexTransform: 
 
-/home/yslu/html/pd17/legalization/src/Legalizer/Legal.cpp
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.cpp
+Abacus.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.h
+
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.h
+limits
+-
 Legal.h
-/home/yslu/html/pd17/legalization/src/Legalizer/Legal.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Legal.h
+
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Legal.cpp
+Legal.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Legal.h
 arghandler.h
-/home/yslu/html/pd17/legalization/src/Legalizer/arghandler.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/arghandler.h
 GnuplotLivePlotter.h
-/home/yslu/html/pd17/legalization/src/Legalizer/GnuplotLivePlotter.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/GnuplotLivePlotter.h
 GnuplotMatrixPlotter.h
-/home/yslu/html/pd17/legalization/src/Legalizer/GnuplotMatrixPlotter.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/GnuplotMatrixPlotter.h
+Abacus.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.h
 algorithm
 -
 cmath
@@ -28,17 +40,17 @@ set
 cassert
 -
 
-/home/yslu/html/pd17/legalization/src/Legalizer/Legal.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Legal.h
 Util.h
-/home/yslu/html/pd17/legalization/src/Legalizer/Util.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Util.h
 Row.h
-/home/yslu/html/pd17/legalization/src/Legalizer/Row.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Row.h
 Placement.h
-/home/yslu/html/pd17/legalization/src/Legalizer/Placement.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/Placement.h
 GnuplotLivePlotter.h
-/home/yslu/html/pd17/legalization/src/Legalizer/GnuplotLivePlotter.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/GnuplotLivePlotter.h
 GnuplotMatrixPlotter.h
-/home/yslu/html/pd17/legalization/src/Legalizer/GnuplotMatrixPlotter.h
+/home/yoda/Documents/Github/Legalizer/src/Legalizer/GnuplotMatrixPlotter.h
 math.h
 -
 stdio.h

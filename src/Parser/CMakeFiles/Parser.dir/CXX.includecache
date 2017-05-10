@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/yslu/html/pd17/legalization/src/Parser/BookshelfParser.cpp
+/home/yoda/Documents/Github/Legalizer/src/Parser/BookshelfParser.cpp
 BookshelfParser.h
-/home/yslu/html/pd17/legalization/src/Parser/BookshelfParser.h
+/home/yoda/Documents/Github/Legalizer/src/Parser/BookshelfParser.h
 iostream
 -
 fstream
@@ -16,9 +16,9 @@ fstream
 sstream
 -
 Util.h
-/home/yslu/html/pd17/legalization/src/Parser/Util.h
+/home/yoda/Documents/Github/Legalizer/src/Parser/Util.h
 
-/home/yslu/html/pd17/legalization/src/Parser/BookshelfParser.h
+/home/yoda/Documents/Github/Legalizer/src/Parser/BookshelfParser.h
 vector
 -
 string
@@ -26,7 +26,7 @@ string
 map
 -
 Placement/Placement.h
-/home/yslu/html/pd17/legalization/src/Parser/Placement/Placement.h
+/home/yoda/Documents/Github/Legalizer/src/Parser/Placement/Placement.h
 
 PlaceCommon/Util.h
 iostream

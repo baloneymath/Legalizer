@@ -1,4 +1,4 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "CMakeFiles/Gnuplot.dir/GnuplotLivePlotter.cpp.o"
   "CMakeFiles/Gnuplot.dir/GnuplotMatrixPlotter.cpp.o"
   "CMakeFiles/Gnuplot.dir/GnuplotPlotter.cpp.o"
@@ -7,6 +7,6 @@ FILE(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-FOREACH(lang CXX)
-  INCLUDE(CMakeFiles/Gnuplot.dir/cmake_clean_${lang}.cmake OPTIONAL)
-ENDFOREACH(lang)
+foreach(lang CXX)
+  include(CMakeFiles/Gnuplot.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

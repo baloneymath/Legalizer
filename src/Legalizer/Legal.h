@@ -22,6 +22,8 @@ class CLegal
 
     //Solve the legalization, "true" indicates success
         bool solve();
+    // helper functions add by Hao
+        void plot();
     //Check the legalization result is overlap-free, within boundary, and on-site, "true" indicates legal
         bool check();
         void saveGlobalResult();

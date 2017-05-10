@@ -1,25 +1,25 @@
 # The set of languages for which implicit dependencies are needed:
-SET(CMAKE_DEPENDS_LANGUAGES
+set(CMAKE_DEPENDS_LANGUAGES
   "CXX"
   )
 # The set of files for implicit dependencies of each language:
-SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/yslu/html/pd17/legalization/src/Gnuplot/GnuplotLivePlotter.cpp" "/home/yslu/html/pd17/legalization/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotLivePlotter.cpp.o"
-  "/home/yslu/html/pd17/legalization/src/Gnuplot/GnuplotMatrixPlotter.cpp" "/home/yslu/html/pd17/legalization/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotMatrixPlotter.cpp.o"
-  "/home/yslu/html/pd17/legalization/src/Gnuplot/GnuplotPlotter.cpp" "/home/yslu/html/pd17/legalization/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotPlotter.cpp.o"
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/GnuplotLivePlotter.cpp" "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotLivePlotter.cpp.o"
+  "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/GnuplotMatrixPlotter.cpp" "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotMatrixPlotter.cpp.o"
+  "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/GnuplotPlotter.cpp" "/home/yoda/Documents/Github/Legalizer/src/Gnuplot/CMakeFiles/Gnuplot.dir/GnuplotPlotter.cpp.o"
   )
-SET(CMAKE_CXX_COMPILER_ID "GNU")
-
-# Targets to which this target links.
-SET(CMAKE_TARGET_LINKED_INFO_FILES
-  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
-SET(CMAKE_C_TARGET_INCLUDE_PATH
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "Placement"
   "PlaceCommon"
   "."
   )
-SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

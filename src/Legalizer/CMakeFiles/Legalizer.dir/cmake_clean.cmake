@@ -1,10 +1,11 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "CMakeFiles/Legalizer.dir/Legal.cpp.o"
+  "CMakeFiles/Legalizer.dir/Abacus.cpp.o"
   "libLegalizer.pdb"
   "libLegalizer.a"
 )
 
 # Per-language clean rules from dependency scanning.
-FOREACH(lang CXX)
-  INCLUDE(CMakeFiles/Legalizer.dir/cmake_clean_${lang}.cmake OPTIONAL)
-ENDFOREACH(lang)
+foreach(lang CXX)
+  include(CMakeFiles/Legalizer.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
