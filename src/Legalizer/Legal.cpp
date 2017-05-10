@@ -281,6 +281,7 @@ CLegal::CLegal( Placement& placement  ) :
     m_bestLocations.resize( placement.numModules() );
     m_globalLocations.resize( placement.numModules() );
     m_chip_left_bound = placement.rectangleChip().left();
+    m_chip_right_bound = placement.rectangleChip().right();
 
 }
 

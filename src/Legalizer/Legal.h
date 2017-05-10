@@ -37,7 +37,6 @@ class CLegal
         vector<int> m_cell_order; //Used as legalization order
         vector<Row> m_free_sites; //Record the unused sites
         vector<Row> m_left_free_sites;
-
         vector<CPoint> m_origLocations;	//Record the original locations
         vector<CPoint> m_bestLocations;	//Record the best locations
         vector<Row> m_best_sites;       //Record the resulting sites of the best result
@@ -68,6 +67,7 @@ class CLegal
                                                                    //height of each site
         int m_unlegal_count;            //Number of unlegalized cells
         double m_chip_left_bound;	//Record the chip left boundary
+        double m_chip_right_bound;	//Record the chip right boundary
 };
 
 #endif 
