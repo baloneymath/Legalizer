@@ -33,7 +33,7 @@ class CLegal
         //**********************************
         //* Information of Macros or Cells *
         //**********************************
-
+        vector<Module*> m_all_modules;
         vector<int> m_cell_order; //Used as legalization order
         vector<Row> m_free_sites; //Record the unused sites
         vector<Row> m_left_free_sites;

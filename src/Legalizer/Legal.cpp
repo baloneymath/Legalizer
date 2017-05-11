@@ -260,6 +260,8 @@ CLegal::CLegal( Placement& placement  ) :
     for( unsigned  moduleId = 0 ; moduleId < placement.numModules() ; moduleId++ )
     {
         Module& curModule = placement.module(moduleId);
+        Module* pCur = &curModule;
+        m_all_modules.push_back(pCur);
 
         m_max_module_height = max( m_max_module_height, curModule.height() );
         m_max_module_width = max( m_max_module_width, curModule.width() );

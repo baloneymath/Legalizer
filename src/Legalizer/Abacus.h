@@ -5,7 +5,6 @@
 #include "Legal.h"
 using namespace std;
 
-constexpr double MAX_DOUBlE = numeric_limits<double>::max();
 constexpr unsigned MAX_UNSIGNED = numeric_limits<unsigned>::max();
 
 class Cluster {
@@ -48,6 +47,7 @@ class Abacus {
     public:
         Abacus(CLegal& legalizer) : _legalizer(legalizer) {
             _clusters.resize(_legalizer.m_free_sites.size());
+            _rowModules.resize(_legalizer.m_free_sites.size());
         }
         ~Abacus() {}
 
@@ -59,14 +59,19 @@ class Abacus {
                 return _clusters[rowId].back(); 
             else return NULL;
         }
+
     private:
         CLegal& _legalizer;
         vector<vector<Cluster*>> _clusters;
         vector<vector<Module*>>  _rowModules;
 
         // helper functions
-        void placeRow(unsigned rowId, Module* mod);
+        void placeRow(unsigned rowId, Module* mod, bool isTrial);
+        void insertModule(Module* mod, unsigned rowId);
+        void removeModule(Module* mod, unsigned rowId);
         void collapse(Cluster* c, double x_min, double x_max);
+        void updateModulesLocation(Cluster* c);
+        double computeCost(unsigned modId);
 };
 
 #endif
