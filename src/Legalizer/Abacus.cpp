@@ -89,14 +89,13 @@ void Abacus::placeRow(unsigned rowId, Module* mod, bool isTrial)
             double x_max = x_min + free_sites[rowId].width();
             collapse(c, x_min, x_max);
         }
-        updateModulesLocation(c);
     }
     for (unsigned j = 0; j < _clusters[rowId].size(); ++j) {
         Cluster* cc = _clusters[rowId][j];
-        double x = cc->_x;
-        for (unsigned k = 0; k < cc->numModules(); ++k) {
-            cc->_modules[k]->setPosition(x, free_sites[rowId].y());
-            x += cc->_modules[k]->width();
+        updateModulesLocation(cc);
+    }
+    if (!isTrial) { // update final positions
+        for (unsigned i = 0; i < _rowModules[rowId].size(); ++i) {
         }
     }
 }
@@ -136,8 +135,10 @@ void Abacus::collapse(Cluster* c, double x_min, double x_max)
 
 void Abacus::updateModulesLocation(Cluster* c)
 {
+    double x = c->_x;
     for (unsigned i = 0; i < c->_modules.size(); ++i) {
-        c->_modules[i]->setPosition(c->_x, free_sites[c->_rowId].y());
+        c->_modules[i]->setPosition(x, free_sites[c->_rowId].y());
+        x += c->_modules[i]->width();
     }
 }
 
