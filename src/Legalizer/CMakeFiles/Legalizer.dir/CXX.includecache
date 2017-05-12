@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -10,6 +10,8 @@
 Abacus.h
 /home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.h
 algorithm
+-
+cmath
 -
 
 /home/yoda/Documents/Github/Legalizer/src/Legalizer/Abacus.h

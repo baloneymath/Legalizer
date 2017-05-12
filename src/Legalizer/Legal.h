@@ -34,10 +34,11 @@ class CLegal
         //* Information of Macros or Cells *
         //**********************************
         vector<Module*> m_all_modules;
+        vector<double> m_row_remain_width;
         vector<int> m_cell_order; //Used as legalization order
         vector<Row> m_free_sites; //Record the unused sites
         vector<Row> m_left_free_sites;
-        vector<CPoint> m_origLocations;	//Record the original locations
+        vector<CPoint> m_currentLocations;	//Record the current locations
         vector<CPoint> m_bestLocations;	//Record the best locations
         vector<Row> m_best_sites;       //Record the resulting sites of the best result
 

@@ -278,7 +278,11 @@ CLegal::CLegal( Placement& placement  ) :
     m_free_sites = placement.m_sites;
     m_site_bottom = m_free_sites.front().y();
     m_site_height = m_free_sites.front().height();
-
+    m_row_remain_width.resize(m_free_sites.size());
+    for (unsigned i = 0; i < m_free_sites.size(); ++i) {
+        m_row_remain_width[i] = m_free_sites[i].width();
+    }
+ 
     //initalize m_origLocations and m_bestLocations
     m_bestLocations.resize( placement.numModules() );
     m_globalLocations.resize( placement.numModules() );

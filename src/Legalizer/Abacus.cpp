@@ -1,8 +1,10 @@
 #include "Abacus.h"
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 #define all_modules                  _legalizer.m_all_modules
+#define row_remain_width             _legalizer.m_row_remain_width
 #define cell_order                   _legalizer.m_cell_order
 #define free_sites                   _legalizer.m_free_sites
 #define left_free_sites              _legalizer.m_left_free_sites
@@ -28,6 +30,7 @@ using namespace std;
 constexpr double MAX_DBL = numeric_limits<double>::max();
 constexpr double MIN_DBL = numeric_limits<double>::lowest();
 
+
 void Abacus::legal()
 {
     // sort modules in x order
@@ -36,117 +39,108 @@ void Abacus::legal()
     };
     sort(all_modules.begin(), all_modules.end(), compareX);
     for (unsigned i = 0; i < all_modules.size(); ++i) {
-        Module* mod = all_modules[i];
+        cerr << i << endl;
         double c_best = MAX_DBL;
+        double cost = MAX_DBL;
         unsigned r_best = MAX_UNSIGNED;
         for (unsigned r = 0; r < free_sites.size(); ++r) {
-            insertModule(mod, r);
-            placeRow(r, mod, true);
-            double cost = computeCost(i);
-            if (cost < c_best) {
-                c_best = cost;
-                r_best = r;
-            }
-            removeModule(mod, r);
+            if (all_modules[i]->width() > row_remain_width[r]) continue;
+            insertModule(i, r);
+            cost = placeRow(r, true);
+            if (cost < c_best) { c_best = cost; r_best = r; }
+            removeModule(i, r);
         }
-        insertModule(mod, r_best);
-        placeRow(r_best, mod, false);
+        insertModule(i, r_best);
+        row_remain_width[r_best] -= all_modules[i]->width();
+        placeRow(r_best, false);
     }
 }
 
-void Abacus::insertModule(Module* mod, unsigned rowId)
+void Abacus::addModule(Cluster& c, unsigned modId)
 {
-    mod->setPosition(mod->x(), free_sites[rowId].y());
-    _rowModules[rowId].push_back(mod);
+    c._modules.push_back(modId);
+    Module* mod = all_modules[modId];
+    c._e += mod->numPins();
+    c._q += mod->numPins() * (globalLocations[modId].x - c._w);
+    c._w += mod->width();
 }
 
-void Abacus::removeModule(Module* mod, unsigned rowId)
+void Abacus::addCluster(Cluster& c1, Cluster& c2)
+{
+    for (unsigned i = 0; i < c2._modules.size(); ++i) {
+        c1._modules.push_back(c2._modules[i]);
+    }
+    c1._e += c2._e;
+    c1._q += c2._q - c2._e * c1._w;
+    c1._w += c2._w;
+}
+
+void Abacus::collapse(Cluster& c, double x_min, double x_max)
+{
+    c._x = c._q / c._e;
+    if (c._x < x_min) c._x = x_min;
+    if (c._x > x_max - c._w) c._x = x_max - c._w;
+    
+    if (c._prev != MAX_UNSIGNED) {
+        Cluster& prev = _clusters[c._rowId][c._prev];
+        if (prev._x + prev._w > c._x) {
+            addCluster(prev, c);
+            _clusters[c._rowId].pop_back();
+            collapse(prev, x_min, x_max);
+        }
+    }
+}
+
+double Abacus::placeRow(unsigned rowId, bool isTrial)
+{
+    vector<Cluster> oldClusters = _clusters[rowId];
+    unsigned modId = _rowModules[rowId].back();
+    bool newCluster = (_clusters[rowId].empty() || 
+                       lastCluster(rowId)._x + lastCluster(rowId)._w <= globalLocations[modId].x);
+    if (newCluster) {
+        Cluster newC = Cluster();
+        newC._rowId = rowId;
+        newC._x = globalLocations[modId].x;
+        if (!_clusters[rowId].empty())
+            newC._prev = _clusters[rowId].size() - 1;
+        addModule(newC, modId);
+        _clusters[rowId].push_back(newC);
+    }
+    else {
+        Cluster& c = lastCluster(rowId);
+        addModule(c, modId);
+        double x_min = free_sites[rowId].x();
+        double x_max = x_min + free_sites[rowId].width();
+        collapse(c, x_min, x_max);
+    }
+    double cost = 0;
+    for (unsigned i = 0; i < _clusters[rowId].size(); ++i) {
+        Cluster& c = _clusters[rowId][i];
+        double x = c._x;
+        for (unsigned j = 0; j < c._modules.size(); ++j) {
+            unsigned modId = c._modules[j];
+            Module* mod = all_modules[modId];
+            if (!isTrial) {
+                bestLocations[modId].x = x;
+                bestLocations[modId].y = free_sites[rowId].y();
+            }
+            else {
+                cost += fabs(x - globalLocations[modId].x) +
+                        fabs(free_sites[rowId].y() - globalLocations[modId].y);
+            }
+            x += mod->width();
+        }
+    }
+    if (isTrial) _clusters[rowId] = oldClusters;
+    return cost;
+}
+
+void Abacus::insertModule(unsigned modId, unsigned rowId)
+{
+    _rowModules[rowId].push_back(modId);
+}
+
+void Abacus::removeModule(unsigned modId, unsigned rowId)
 {
     _rowModules[rowId].pop_back();
-}
-
-void Abacus::placeRow(unsigned rowId, Module* mod, bool isTrial)
-{
-    for (unsigned i = 0; i < _rowModules[rowId].size(); ++i) {
-        Cluster* c = lastCluster(rowId);
-        if (i == 0) { // first module, c == NULL
-            Cluster* newC = new Cluster();
-            newC->_rowId = rowId;
-            newC->_x = mod->x();
-            newC->addModule(mod);
-            _clusters[rowId].push_back(newC);
-        }
-        else if (c != NULL && c->_x + c->_w <= mod->x()) {
-            Cluster* newC = new Cluster();
-            newC->_rowId = rowId;
-            newC->_x = mod->x();
-            newC->addModule(mod);
-            _clusters[rowId].push_back(newC);
-        }
-        else {
-            c->addModule(mod);
-            double x_min = free_sites[rowId].x();
-            double x_max = x_min + free_sites[rowId].width();
-            collapse(c, x_min, x_max);
-        }
-    }
-    for (unsigned j = 0; j < _clusters[rowId].size(); ++j) {
-        Cluster* cc = _clusters[rowId][j];
-        updateModulesLocation(cc);
-    }
-    if (!isTrial) { // update final positions
-        for (unsigned i = 0; i < _rowModules[rowId].size(); ++i) {
-        }
-    }
-}
-
-void Cluster::addModule(Module* mod)
-{
-    _modules.push_back(mod);
-    _e += mod->numPins();
-    _q += mod->numPins() * (mod->x() - _w);
-    _w += mod->width();
-}
-
-void Cluster::addCluster(Cluster& c)
-{
-    for (unsigned i = 0; i < c.numModules(); ++i) {
-        _modules.push_back(c.firstModule());
-    }
-    _e += c._e;
-    _q += c._q - (c._e * c._w);
-    _w += c._w;
-}
-
-void Abacus::collapse(Cluster* c, double x_min, double x_max)
-{
-    vector<Cluster*>& clusters = _clusters[c->_rowId];
-    c->_x = (c->_q / c->_e);
-    if (c->_x < x_min) c->_x = x_min;
-    if (c->_x > x_max - c->_w) c->_x = x_max - c->_w;
-    Cluster* prev = c->_prev;
-    if (prev != NULL && prev->_x + prev->_w > c->_x) {
-        prev->addCluster(*c);
-        clusters.erase(clusters.begin() + c->_siteId);
-        delete c;
-        collapse(prev, x_min, x_max);
-    }
-}
-
-void Abacus::updateModulesLocation(Cluster* c)
-{
-    double x = c->_x;
-    for (unsigned i = 0; i < c->_modules.size(); ++i) {
-        c->_modules[i]->setPosition(x, free_sites[c->_rowId].y());
-        x += c->_modules[i]->width();
-    }
-}
-
-double Abacus::computeCost(unsigned modId)
-{
-    double oriX = globalLocations[modId].x;
-    double oriY = globalLocations[modId].y;
-    double x = all_modules[modId]->x();
-    double y = all_modules[modId]->y();
-    return (x - oriX) * (x - oriX) + (y - oriY) * (y - oriY);
 }

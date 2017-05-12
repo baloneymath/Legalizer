@@ -13,11 +13,8 @@ class Cluster {
         Cluster() 
             : _x(-1), _w(0), _e(0), _q(0),
             _rowId(MAX_UNSIGNED), _siteId(MAX_UNSIGNED),
-            _prev(NULL), _next(NULL) {}
+            _prev(MAX_UNSIGNED) {}
         ~Cluster() {}
-
-        void addModule(Module* mod);
-        void addCluster(Cluster& c);
 
         // get
         double x() const { return _x; }
@@ -26,11 +23,6 @@ class Cluster {
         double q() const { return _q; }
         unsigned rowId() const { return _rowId; }
         unsigned siteId() const { return _siteId; }
-        Cluster* prev() const { return _prev; }
-        Cluster* next() const { return _next; }
-        unsigned numModules() const { return _modules.size(); }
-        Module*  firstModule() { return _modules.front(); }
-        Module*  lastModule() { return _modules.back(); }
 
     private:    
         double _x;
@@ -39,8 +31,8 @@ class Cluster {
         double _q; // optimal = _q / _e
         unsigned _rowId;
         unsigned _siteId;
-        Cluster *_prev, *_next;
-        vector<Module*> _modules;
+        unsigned _prev; // prev row clusterId
+        vector<unsigned> _modules;
 };
 
 class Abacus {
@@ -54,24 +46,22 @@ class Abacus {
         void legal();
 
         // get 
-        Cluster* lastCluster(unsigned rowId) const { 
-            if (_clusters[rowId].size() > 0)
-                return _clusters[rowId].back(); 
-            else return NULL;
+        Cluster& lastCluster(unsigned rowId) { 
+            return _clusters[rowId].back();
         }
 
     private:
         CLegal& _legalizer;
-        vector<vector<Cluster*>> _clusters;
-        vector<vector<Module*>>  _rowModules;
+        vector<vector<Cluster>>  _clusters;
+        vector<vector<unsigned>>  _rowModules;
 
         // helper functions
-        void placeRow(unsigned rowId, Module* mod, bool isTrial);
-        void insertModule(Module* mod, unsigned rowId);
-        void removeModule(Module* mod, unsigned rowId);
-        void collapse(Cluster* c, double x_min, double x_max);
-        void updateModulesLocation(Cluster* c);
-        double computeCost(unsigned modId);
+        double placeRow(unsigned rowId, bool isTrial);
+        void addModule(Cluster& c, unsigned modId);
+        void addCluster(Cluster& c1, Cluster& c2);
+        void insertModule(unsigned modId, unsigned rowId);
+        void removeModule(unsigned modId, unsigned rowId);
+        void collapse(Cluster& c, double x_min, double x_max);
 };
 
 #endif
