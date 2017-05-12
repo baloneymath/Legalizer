@@ -56,11 +56,14 @@ class Abacus {
         vector<vector<unsigned>>  _rowModules;
 
         // helper functions
+        double __legal();
+        double totalDisplacement();
+
         double placeRow(unsigned rowId, bool isTrial);
         void addModule(Cluster& c, unsigned modId);
         void addCluster(Cluster& c1, Cluster& c2);
         void insertModule(unsigned modId, unsigned rowId);
-        void removeModule(unsigned modId, unsigned rowId);
+        void removeModule(unsigned rowId);
         void collapse(Cluster& c, double x_min, double x_max);
 };
 

@@ -284,11 +284,25 @@ CLegal::CLegal( Placement& placement  ) :
     }
  
     //initalize m_origLocations and m_bestLocations
+    m_cell_order.resize( placement.numModules() );
     m_bestLocations.resize( placement.numModules() );
     m_globalLocations.resize( placement.numModules() );
     m_chip_left_bound = placement.rectangleChip().left();
     m_chip_right_bound = placement.rectangleChip().right();
-
+    
+    vector<pair<Module*, unsigned>> tmp;
+    for (unsigned i = 0; i < m_cell_order.size(); ++i) {
+        tmp.push_back(make_pair(m_all_modules[i], i));
+    }
+    auto sortByX = [] (pair<Module*, unsigned> p1, pair<Module*, unsigned> p2) {
+        return p1.first->x() < p2.first->x();
+    };
+    sort(tmp.begin(), tmp.end(), sortByX);
+    for (unsigned i = 0; i < m_cell_order.size(); ++i) {
+        m_cell_order[i] = tmp[i].second;
+    }
+    m_cell_order2 = m_cell_order;
+    reverse(m_cell_order2.begin(), m_cell_order2.end());
 }
 
 void CLegal::saveGlobalResult()

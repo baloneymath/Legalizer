@@ -35,7 +35,8 @@ class CLegal
         //**********************************
         vector<Module*> m_all_modules;
         vector<double> m_row_remain_width;
-        vector<int> m_cell_order; //Used as legalization order
+        vector<unsigned> m_cell_order; //Used as legalization order
+        vector<unsigned> m_cell_order2; //Used as legalization order
         vector<Row> m_free_sites; //Record the unused sites
         vector<Row> m_left_free_sites;
         vector<CPoint> m_currentLocations;	//Record the current locations
