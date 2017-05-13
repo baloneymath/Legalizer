@@ -41,40 +41,36 @@ double Abacus::__legal()
     // already sorted in x order
     for (unsigned i = 0; i < all_modules.size(); ++i) {
         unsigned modId = cell_order[i];
-        double c_best1 = MAX_DBL, c_best2 = MAX_DBL;
+        double c_best = MAX_DBL;
         double cost = MAX_DBL;
-        unsigned r_best1 = MAX_UNSIGNED, r_best2 = MAX_UNSIGNED;
+        unsigned r_best = MAX_UNSIGNED;
         
         double curHeight = globalLocations[modId].y - site_bottom;
         int startR = floor(curHeight / site_height);
         for (int r = startR; r < (int)free_sites.size(); ++r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best1) break;
-            if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best1) break;
+            if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
             cost = placeRow(r, true);
-            if (cost < c_best1) { 
-                c_best1 = cost;
-                r_best1 = r;
+            if (cost < c_best) { 
+                c_best = cost;
+                r_best = r;
             }
             removeModule(r);
         }
-        cost = MAX_DBL;
         for (int r = startR - 1; r >= 0; --r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best2) break;
-            if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best2) break;
+            if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
             cost = placeRow(r, true);
-            if (cost < c_best2) { 
-                c_best2 = cost;
-                r_best2 = r;
+            if (cost < c_best) { 
+                c_best = cost;
+                r_best = r;
             }
             removeModule(r);
         }
-        unsigned r_best;
-        if (c_best1 < c_best2) r_best = r_best1;
-        else r_best = r_best2;
 
         insertModule(modId, r_best);
         row_remain_width[r_best] -= all_modules[modId]->width();
@@ -169,6 +165,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
                 //        fabs(free_sites[rowId].y() - globalLocations[modId].y);
                 cost += pow(x - globalLocations[modId].x, 2) +
                         pow(free_sites[rowId].y() - globalLocations[modId].y, 2);
+                cost = sqrt(cost);
             }
             x += mod->width();
         }
