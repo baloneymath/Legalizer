@@ -11,7 +11,7 @@ class Cluster {
     friend class Abacus;
     public:
         Cluster() 
-            : _x(-1), _w(0), _e(0), _q(0),
+            : _x(0), _w(0), _e(0), _q(0),
             _rowId(MAX_UNSIGNED), _siteId(MAX_UNSIGNED),
             _prev(MAX_UNSIGNED) {}
         ~Cluster() {}

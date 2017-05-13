@@ -295,7 +295,8 @@ CLegal::CLegal( Placement& placement  ) :
         tmp.push_back(make_pair(m_all_modules[i], i));
     }
     auto sortByX = [] (pair<Module*, unsigned> p1, pair<Module*, unsigned> p2) {
-        return p1.first->x() < p2.first->x();
+        return p1.first->centerX() < p2.first->centerX();
+        //return p1.first->x() < p2.first->x();
     };
     sort(tmp.begin(), tmp.end(), sortByX);
     for (unsigned i = 0; i < m_cell_order.size(); ++i) {

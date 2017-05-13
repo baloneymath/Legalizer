@@ -136,7 +136,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
     vector<Cluster> oldClusters = _clusters[rowId];
     unsigned modId = _rowModules[rowId].back();
     bool gen = (_clusters[rowId].empty() || 
-                    lastCluster(rowId)._x + lastCluster(rowId)._w <= globalLocations[modId].x);
+                lastCluster(rowId)._x + lastCluster(rowId)._w <= globalLocations[modId].x);
     if (gen) {
         Cluster newC = Cluster();
         newC._rowId = rowId;
