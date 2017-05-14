@@ -149,7 +149,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
         double x_max = x_min + free_sites[rowId].width();
         collapse(c, x_min, x_max);
     }
-    double cost = 0;
+    double cost = 0, placeX = 0;
     for (unsigned i = 0; i < _clusters[rowId].size(); ++i) {
         Cluster& c = _clusters[rowId][i];
         double x = c._x;
@@ -160,16 +160,17 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
                 bestLocations[modId].x = x;
                 bestLocations[modId].y = free_sites[rowId].y();
             }
-            else {
-                //cost += fabs(x - globalLocations[modId].x) +
-                //        fabs(free_sites[rowId].y() - globalLocations[modId].y);
-                cost += pow(x - globalLocations[modId].x, 2) +
-                        pow(free_sites[rowId].y() - globalLocations[modId].y, 2);
-                cost = sqrt(cost);
-            }
             x += mod->width();
         }
+        placeX = x;
     }
+    placeX -= all_modules[_clusters[rowId].back()._modules.back()]->width();
+    // define cost
+    cost = fabs(placeX - globalLocations[modId].x) +
+            fabs(free_sites[rowId].y() - globalLocations[modId].y);
+    //cost = pow(placeX - globalLocations[modId].x, 2) +
+    //        pow(free_sites[rowId].y() - globalLocations[modId].y, 2);
+    //cost = sqrt(cost);
     if (isTrial) _clusters[rowId] = oldClusters;
     return cost;
 }
