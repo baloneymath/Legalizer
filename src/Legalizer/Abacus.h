@@ -56,7 +56,6 @@ class Abacus {
         vector<vector<unsigned>>  _rowModules;
 
         // helper functions
-        double __legal();
         double totalDisplacement();
 
         double placeRow(unsigned rowId, bool isTrial);

@@ -33,11 +33,6 @@ constexpr double MIN_DBL = numeric_limits<double>::lowest();
 
 void Abacus::legal()
 {
-    double displacement1 = __legal();
-}
-
-double Abacus::__legal()
-{
     // already sorted in x order
     for (unsigned i = 0; i < all_modules.size(); ++i) {
         unsigned modId = cell_order[i];
@@ -49,7 +44,8 @@ double Abacus::__legal()
         int startR = floor(curHeight / site_height);
         for (int r = startR; r < (int)free_sites.size(); ++r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            if (1.6 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
             cost = placeRow(r, true);
@@ -61,7 +57,8 @@ double Abacus::__legal()
         }
         for (int r = startR - 1; r >= 0; --r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            if (1.6 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
             cost = placeRow(r, true);
@@ -76,7 +73,6 @@ double Abacus::__legal()
         row_remain_width[r_best] -= all_modules[modId]->width();
         placeRow(r_best, false);
     }
-    return totalDisplacement();
 }
 
 double Abacus::totalDisplacement()
@@ -149,7 +145,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
         double x_max = x_min + free_sites[rowId].width();
         collapse(c, x_min, x_max);
     }
-    double cost = 0, placeX = 0;
+    double cost = 0, placeX = 0, increaseDP = 0;
     for (unsigned i = 0; i < _clusters[rowId].size(); ++i) {
         Cluster& c = _clusters[rowId][i];
         double x = c._x;
@@ -160,14 +156,21 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
                 bestLocations[modId].x = x;
                 bestLocations[modId].y = free_sites[rowId].y();
             }
+            else {
+                increaseDP += fabs(x - bestLocations[modId].x);
+            }
             x += mod->width();
         }
         placeX = x;
     }
-    placeX -= all_modules[_clusters[rowId].back()._modules.back()]->width();
+    Module* mod = all_modules[_clusters[rowId].back()._modules.back()];
+    placeX -= mod->width();
     // define cost
-    cost = fabs(placeX - globalLocations[modId].x) +
-            fabs(free_sites[rowId].y() - globalLocations[modId].y);
+    cost =  (fabs(placeX - globalLocations[modId].x) +
+             1.5 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
+             increaseDP;
+    //cost = fabs(placeX - globalLocations[modId].x) +
+    //       fabs(free_sites[rowId].y() - globalLocations[modId].y);
     //cost = pow(placeX - globalLocations[modId].x, 2) +
     //        pow(free_sites[rowId].y() - globalLocations[modId].y, 2);
     //cost = sqrt(cost);
