@@ -92,8 +92,8 @@ void Abacus::addModule(Cluster& c, unsigned modId)
 {
     c._modules.push_back(modId);
     Module* mod = all_modules[modId];
-    c._e += mod->numPins();
-    c._q += mod->numPins() * (globalLocations[modId].x - c._w);
+    c._e += 1;//mod->numPins();
+    c._q += /*mod->numPins() */ (globalLocations[modId].x - c._w);
     c._w += mod->width();
 }
 
@@ -167,7 +167,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
     placeX -= mod->width();
     // define cost
     cost =  (fabs(placeX - globalLocations[modId].x) +
-             1.5 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
+             1.6 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
              increaseDP;
     //cost = fabs(placeX - globalLocations[modId].x) +
     //       fabs(free_sites[rowId].y() - globalLocations[modId].y);

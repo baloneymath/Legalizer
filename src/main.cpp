@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             cout<<"legalization fail!"<<endl;
 
 
-        placement.outputGnuplotFigure(placement.name()+".lg.plt");
+    //    placement.outputGnuplotFigure(placement.name()+".lg.plt");
         placement.outputBookshelfFormat(placement.name()+".lg.pl");
 
         total_legal_time = time(NULL) - legal_time_start;
@@ -105,10 +105,10 @@ int main(int argc, char *argv[])
     }
 
     cout<<endl<<endl<<"////////////////////"<<endl;
-    if(placement.plname()!="")
-        cout << "Benchmark: " << placement.plname() << endl;
-    else
-        cout << "Benchmark: " << placement.name() << endl;
+   // if(placement.plname()!="")
+   //     cout << "Benchmark: " << placement.plname() << endl;
+   // else
+   //     cout << "Benchmark: " << placement.name() << endl;
 
     return 0;
 }

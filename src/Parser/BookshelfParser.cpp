@@ -68,8 +68,8 @@ bool BookshelfParser::readAuxFile(string filePathName)
     /////////////////////////////////////////////
     readSclFile(filePath + sclFileName);
     readNodesFile(filePath + nodesFileName);
-    readNetsFile(filePath + netsFileName);
-    _placement.connectPinsWithModulesAndNets();
+    //readNetsFile(filePath + netsFileName);
+    //_placement.connectPinsWithModulesAndNets();
     if(_placement.plname()!=""){
         plFileName = _placement.plname();
         readPlFile(plFileName);
