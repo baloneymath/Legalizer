@@ -170,7 +170,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
     placeX -= mod->width();
     // define cost
     cost =  (fabs(placeX - globalLocations[modId].x) +
-             1.6 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
+             1.65 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
              increaseDP;
     //cost = fabs(placeX - globalLocations[modId].x) +
     //       fabs(free_sites[rowId].y() - globalLocations[modId].y);
