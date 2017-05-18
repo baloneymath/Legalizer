@@ -53,6 +53,9 @@ bool CLegal::check()
     for(unsigned int i=0; i<_placement.numModules(); ++i)
     {
         Module& module = _placement.module(i);
+        // ignore Terminals in this program
+        if (module.isFixed()) continue;
+        ///////////////////////////////////
         double curX = module.x();
         double curY = module.y();
 
@@ -84,6 +87,9 @@ bool CLegal::check()
     for(unsigned int i=0; i<_placement.numModules(); ++i)
     {
         Module& module = _placement.module(i);
+        // ignore Terminals in this program
+        if (module.isFixed()) continue;
+        ///////////////////////////////////
         double curY = m_bestLocations[i].y;
 
         if( module.area() == 0 ) continue;

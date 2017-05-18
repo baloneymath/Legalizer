@@ -36,6 +36,9 @@ void Abacus::legal()
     // already sorted in x order
     for (unsigned i = 0; i < all_modules.size(); ++i) {
         unsigned modId = cell_order[i];
+        // ignore Terminals in this program
+        if (all_modules[modId]->isFixed()) continue;
+        ////////////////////////////////////
         double c_best = MAX_DBL;
         double cost = MAX_DBL;
         unsigned r_best = MAX_UNSIGNED;
