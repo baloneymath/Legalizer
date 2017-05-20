@@ -57,6 +57,8 @@ class Abacus {
 
         // helper functions
         double totalDisplacement();
+        double __legal();
+        void flip();
 
         double placeRow(unsigned rowId, bool isTrial);
         void addModule(Cluster& c, unsigned modId);

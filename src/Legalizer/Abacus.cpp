@@ -33,6 +33,44 @@ constexpr double MIN_DBL = numeric_limits<double>::lowest();
 
 void Abacus::legal()
 {
+    vector<double> ori_r = row_remain_width;
+    vector<CPoint> ori_g = globalLocations;
+    
+    vector<CPoint> best1;
+    double disp1 = __legal();
+    best1 = bestLocations;
+    
+    row_remain_width = ori_r;
+    cell_order = cell_order2;
+    bestLocations = globalLocations;
+    for (auto& cluster : _clusters) cluster.clear();
+    for (auto& rowModules : _rowModules) rowModules.clear();
+    flip();
+    
+    double disp2 = __legal();
+    
+    flip();
+    globalLocations = ori_g;
+    cerr << disp1 << ' ' << disp2 << endl;
+    if (disp1 < disp2) bestLocations = best1;
+}
+
+void Abacus::flip()
+{
+    double center = (chip_left_bound + chip_right_bound) / 2;
+    for (unsigned i = 0; i < all_modules.size(); ++i) {
+        Module* mod = all_modules[i];
+        globalLocations[i].x = 2 * center - (globalLocations[i].x + mod->width());
+        bestLocations[i].x = 2 * center - (bestLocations[i].x + mod->width());  
+    }
+    for (unsigned i = 0; i < free_sites.size(); ++i) {
+        double newx = 2 * center - (free_sites[i].x() + free_sites[i].width());
+        free_sites[i].setPosition(newx, free_sites[i].y());
+    }
+}
+
+double Abacus::__legal()
+{
     // already sorted in x order
     for (unsigned i = 0; i < all_modules.size(); ++i) {
         unsigned modId = cell_order[i];
@@ -47,7 +85,7 @@ void Abacus::legal()
         int startR = floor(curHeight / site_height);
         for (int r = startR; r < (int)free_sites.size(); ++r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            if (1.6 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            if (1.85 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
@@ -60,7 +98,7 @@ void Abacus::legal()
         }
         for (int r = startR - 1; r >= 0; --r) {
             if (all_modules[modId]->width() > row_remain_width[r]) continue;
-            if (1.6 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
+            if (1.85 * fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (fabs(globalLocations[modId].y - free_sites[r].y()) > c_best) break;
             //if (pow(globalLocations[modId].y - free_sites[r].y(), 2) > c_best) break;
             insertModule(modId, r);
@@ -76,17 +114,14 @@ void Abacus::legal()
         row_remain_width[r_best] -= all_modules[modId]->width();
         placeRow(r_best, false);
     }
+    return totalDisplacement();
 }
 
 double Abacus::totalDisplacement()
 {
     double totaldis = 0;
-    for(unsigned i = 0; i < all_modules.size(); ++i)
-    {
-        Module& mod = *all_modules[i];
-        double x = mod.x();
-        double y = mod.y();
-        totaldis += CPoint::Distance(globalLocations[i] , CPoint(x, y));
+    for(unsigned i = 0; i < all_modules.size(); ++i) {
+        totaldis += CPoint::Distance(globalLocations[i] , bestLocations[i]);
     }
     return totaldis;
 }
@@ -170,7 +205,7 @@ double Abacus::placeRow(unsigned rowId, bool isTrial)
     placeX -= mod->width();
     // define cost
     cost =  (fabs(placeX - globalLocations[modId].x) +
-             1.65 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
+             1.85 * fabs(free_sites[rowId].y() - globalLocations[modId].y)) +
              increaseDP;
     //cost = fabs(placeX - globalLocations[modId].x) +
     //       fabs(free_sites[rowId].y() - globalLocations[modId].y);

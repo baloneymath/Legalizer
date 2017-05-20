@@ -110,7 +110,8 @@ bool CLegal::check()
             size_t nextId = j+1;
             while( mod.x() + mod.width() > modules[ nextId ]->x() ){
                 Module &modNext = *modules[ nextId ];
-                if( mod.x() + mod.width() > modules[ nextId ]->x() ){
+                if( fabs(mod.x() + mod.width() - modules[ nextId ]->x()) > 1e-9  ){
+                    cerr << mod.x() + mod.width() -modules[nextId]->x() << endl;
                     ++overLap;
                     cout << mod.name() << " overlap with " << modNext.name() << endl;
                 }
@@ -300,15 +301,21 @@ CLegal::CLegal( Placement& placement  ) :
     for (unsigned i = 0; i < m_cell_order.size(); ++i) {
         tmp.push_back(make_pair(m_all_modules[i], i));
     }
-    auto sortByX = [] (pair<Module*, unsigned> p1, pair<Module*, unsigned> p2) {
+    auto sortByCX = [] (pair<Module*, unsigned> p1, pair<Module*, unsigned> p2) {
         return p1.first->centerX() < p2.first->centerX();
-        //return p1.first->x() < p2.first->x();
     };
-    sort(tmp.begin(), tmp.end(), sortByX);
+    auto sortByX = [] (pair<Module*, unsigned> p1, pair<Module*, unsigned> p2) {
+        return p1.first->x() < p2.first->x();
+    };
+    sort(tmp.begin(), tmp.end(), sortByCX);
     for (unsigned i = 0; i < m_cell_order.size(); ++i) {
         m_cell_order[i] = tmp[i].second;
     }
-    m_cell_order2 = m_cell_order;
+    m_cell_order2.resize(m_cell_order.size());
+    sort(tmp.begin(), tmp.end(), sortByX);
+    for (unsigned i = 0; i < m_cell_order2.size(); ++i) {
+        m_cell_order2[i] = tmp[i].second;
+    }
     reverse(m_cell_order2.begin(), m_cell_order2.end());
 }
 
@@ -330,7 +337,8 @@ void CLegal::setLegalResult()
     for (unsigned moduleId = 0; moduleId < _placement.numModules(); moduleId++)
     {
         Module &curModule = _placement.module(moduleId);
-        curModule.setPosition(m_bestLocations[moduleId].x,m_bestLocations[moduleId].y);
+        curModule.setPosition(m_bestLocations[moduleId].x,
+                              m_bestLocations[moduleId].y);
     }
 }
 
