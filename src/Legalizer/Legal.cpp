@@ -110,7 +110,7 @@ bool CLegal::check()
             size_t nextId = j+1;
             while( mod.x() + mod.width() > modules[ nextId ]->x() ){
                 Module &modNext = *modules[ nextId ];
-                if( fabs(mod.x() + mod.width() - modules[ nextId ]->x()) > 1e-9  ){
+                if( mod.x() + mod.width() > modules[ nextId ]->x() ){
                     cerr << mod.x() + mod.width() -modules[nextId]->x() << endl;
                     ++overLap;
                     cout << mod.name() << " overlap with " << modNext.name() << endl;

@@ -49,8 +49,25 @@ void Abacus::legal()
     
     double disp2 = __legal();
     
-    flip();
+    //flip(); // floating point problem
     globalLocations = ori_g;
+    double center = (chip_left_bound + chip_right_bound) / 2;
+    for (unsigned rowId = 0; rowId < _clusters.size(); ++rowId)
+    for (unsigned i = 0; i < _clusters[rowId].size(); ++i) {
+        Cluster& c = _clusters[rowId][i];
+        double x = 2 * center - c._x;
+        for (unsigned j = 0; j < c._modules.size(); ++j) {
+            unsigned modId = c._modules[j];
+            Module* mod = all_modules[modId];
+            x -= mod->width() + 1e-12;
+            bestLocations[modId].x = x;
+            bestLocations[modId].y = free_sites[rowId].y();
+        }
+    }
+    for (unsigned i = 0; i < free_sites.size(); ++i) {
+        double newx = 2 * center - (free_sites[i].x() + free_sites[i].width());
+        free_sites[i].setPosition(newx, free_sites[i].y());
+    }
     cerr << disp1 << ' ' << disp2 << endl;
     if (disp1 < disp2) bestLocations = best1;
 }
