@@ -53,9 +53,7 @@ bool CLegal::check()
     for(unsigned int i=0; i<_placement.numModules(); ++i)
     {
         Module& module = _placement.module(i);
-        // ignore Terminals in this program
-        if (module.isFixed()) continue;
-        ///////////////////////////////////
+        if(module.isFixed()) continue;
         double curX = module.x();
         double curY = module.y();
 
@@ -87,12 +85,10 @@ bool CLegal::check()
     for(unsigned int i=0; i<_placement.numModules(); ++i)
     {
         Module& module = _placement.module(i);
-        // ignore Terminals in this program
-        if (module.isFixed()) continue;
-        ///////////////////////////////////
         double curY = m_bestLocations[i].y;
 
         if( module.area() == 0 ) continue;
+        if( module.isFixed() ) continue;
 
         double yLow = curY - chip.bottom(), yHigh= curY + module.height() - chip.bottom();
         size_t low = floor( yLow / rowHeight ), high = floor(yHigh / rowHeight);
@@ -107,11 +103,11 @@ bool CLegal::check()
         if( modules.size() < 1 ) { continue; }
         for( size_t j = 0; j < modules.size() - 1; ++j ){
             Module &mod = *modules[ j ];
+            if(mod.isFixed()) continue;
             size_t nextId = j+1;
-            while( mod.x() + mod.width() > modules[ nextId ]->x() ){
+            while( mod.x() + mod.width() - modules[ nextId ]->x() > 0.01 ){
                 Module &modNext = *modules[ nextId ];
-                if( mod.x() + mod.width() > modules[ nextId ]->x() ){
-                    cerr << mod.x() + mod.width() -modules[nextId]->x() << endl;
+                if( mod.x() + mod.width() - modules[ nextId ]->x() > 0.01 ){
                     ++overLap;
                     cout << mod.name() << " overlap with " << modNext.name() << endl;
                 }
@@ -119,108 +115,6 @@ bool CLegal::check()
             }
         }
     }
-
-    /*
-    ///////////////////////////////////////////
-    //3. bin-based overlapping checking
-    ///////////////////////////////////////////
-
-    //3.1 build bin
-
-    for(unsigned int k=0; k<_placement.numModules(); ++k)
-    {
-        int binStartX=(int)(m_pDB->m_modules[k].m_x/m_binWidth);
-        int binEndX=(int)( (m_pDB->m_modules[k].m_x+m_pDB->m_modules[k].m_width)/m_binWidth);
-        int binStartY=(int)(m_pDB->m_modules[k].m_y/m_binHeight);
-        int binEndY=(int)((m_pDB->m_modules[k].m_y+m_pDB->m_modules[k].m_height)/m_binHeight);
-        legalBinID(binStartX); legalBinID(binEndX); legalBinID(binStartY); legalBinID(binEndY);
-
-        for(int i=binStartX; i<=binEndX; ++i) {
-            for(int j=binStartY; j<=binEndY; ++j) { m_moduleBins[i][j].push_back(k); }
-        }
-    }
-    //cerr<<"\nFinish build bins";
-
-    //3.2 fow all module, check overlapping inside bin
-    for(int k=0; k<(int)m_pDB->m_modules.size(); ++k)
-    {
-        if( m_pDB->m_modules[k].m_isNI ) continue; // (kaie) 2011-01-08
-
-        int binStartX=(int)(m_pDB->m_modules[k].m_x/m_binWidth);
-        int binEndX=(int)( (m_pDB->m_modules[k].m_x+m_pDB->m_modules[k].m_width)/m_binWidth);
-        int binStartY=(int)(m_pDB->m_modules[k].m_y/m_binHeight);
-        int binEndY=(int)((m_pDB->m_modules[k].m_y+m_pDB->m_modules[k].m_height)/m_binHeight);
-        legalBinID(binStartX); legalBinID(binEndX); legalBinID(binStartY); legalBinID(binEndY);
-        //for all bins
-        for(int m=binStartX; m<=binEndX; ++m) {
-            for(int n=binStartY; n<=binEndY; ++n) {
-                //for all modules in bins
-                for(int i=0; i<(int)m_moduleBins[m][n].size(); ++i) {
-                    if(m_moduleBins[m][n][i]!=k) {
-                        int mID=m_moduleBins[m][n][i];
-
-                        if( m_pDB->m_modules[mID].m_isNI ) continue; // (kaie) 2011-01-08
-
-                        int nBlock1 = max((int)m_pDB->m_modules[k].m_subBlock.size(), 1);
-                        int nBlock2 = max((int)m_pDB->m_modules[mID].m_subBlock.size(), 1);
-
-                        double area = 0;
-
-                        for(int b1 = 0; b1 < nBlock1; b1++) {
-                            double left1, bottom1, right1, top1;
-                            if(m_pDB->m_modules[k].m_isRect)
-                            {
-                                left1   = m_pDB->m_modules[k].m_subBlock[b1].m_x;
-                                bottom1 = m_pDB->m_modules[k].m_subBlock[b1].m_y;
-                                right1  = m_pDB->m_modules[k].m_subBlock[b1].m_x + m_pDB->m_modules[k].m_subBlock[b1].m_width;
-                                top1    = m_pDB->m_modules[k].m_subBlock[b1].m_y + m_pDB->m_modules[k].m_subBlock[b1].m_height;
-                            }else
-                            {
-                                left1   = m_pDB->m_modules[k].m_x;
-                                bottom1 = m_pDB->m_modules[k].m_y;
-                                right1  = m_pDB->m_modules[k].m_x + m_pDB->m_modules[k].m_width;
-                                top1    = m_pDB->m_modules[k].m_y + m_pDB->m_modules[k].m_height;
-                            }
-                            for(int b2 = 0; b2 < nBlock2; b2++)
-                            {
-                                double left2, bottom2, right2, top2;
-                                if(m_pDB->m_modules[mID].m_isRect)
-                                {
-                                    left2   = m_pDB->m_modules[mID].m_subBlock[b2].m_x;
-                                    bottom2 = m_pDB->m_modules[mID].m_subBlock[b2].m_y;
-                                    right2  = m_pDB->m_modules[mID].m_subBlock[b2].m_x + m_pDB->m_modules[mID].m_subBlock[b2].m_width;
-                                    top2    = m_pDB->m_modules[mID].m_subBlock[b2].m_y + m_pDB->m_modules[mID].m_subBlock[b2].m_height;
-                                }else
-                                {
-                                    left2   = m_pDB->m_modules[mID].m_x;
-                                    bottom2 = m_pDB->m_modules[mID].m_y;
-                                    right2  = m_pDB->m_modules[mID].m_x + m_pDB->m_modules[mID].m_width;
-                                    top2    = m_pDB->m_modules[mID].m_y + m_pDB->m_modules[mID].m_height;
-                                }
-                                area += getOverlapArea(
-                                            left1, bottom1, right1, top1, left2, bottom2, right2, top2
-                                            );
-                            }
-                        }
-                        if( (abs( area ) > 0.1) && !(m_pDB->m_modules[k].m_isFixed
-                                                     && m_pDB->m_modules[mID].m_isFixed)
-                                //(m_pDB->m_modules[k].m_isFixed==false || m_pDB->m_modules[mID].m_isFixed==false )
-                                )
-                        {
-                            cout<<"\nWarning: cell:"<<m_pDB->m_modules[k].m_name
-                               <<"("<<m_pDB->m_modules[k].m_x<<","<<m_pDB->m_modules[k].m_y
-                              <<","<< m_pDB->m_modules[k].m_width
-                             <<") overlap with cell "<<m_pDB->m_modules[mID].m_name
-                            <<"("<<m_pDB->m_modules[mID].m_x<<","<<m_pDB->m_modules[mID].m_y
-                            <<","<< m_pDB->m_modules[mID].m_width<<")!!Area:"<<area<<"";
-                            fflush(stdout);
-                            ++overLap;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 
     cout << endl <<
             "  # row error: "<<notInRow<<
